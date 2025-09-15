@@ -53,11 +53,23 @@ namespace backend.Controllers
         public async Task<IActionResult> UpdateUser(int id, [FromBody] User user)
         {
             if (id != user.Id)
-            {
                 return BadRequest();
-            }
-            
-            _context.Entry(user).State = EntityState.Modified;
+
+            var existingUser = await _context.Users.FindAsync(id);
+            if (existingUser == null)
+                return NotFound();
+
+            // Uppdatera bara de fält som ska ändras
+            existingUser.Username = user.Username ?? existingUser.Username;
+            existingUser.Email = user.Email ?? existingUser.Email;
+            existingUser.AvatarId = user.AvatarId != 0 ? user.AvatarId : existingUser.AvatarId;
+
+            // Endast om lösenord skickas med
+            if (!string.IsNullOrEmpty(user.PasswordHash))
+                existingUser.PasswordHash = user.PasswordHash;
+
+            // Om du vill tillåta att Level ändras, lägg till:
+            // existingUser.Level = user.Level != 0 ? user.Level : existingUser.Level;
 
             try
             {
@@ -66,39 +78,36 @@ namespace backend.Controllers
             catch (DbUpdateConcurrencyException)
             {
                 if (!UserExists(id))
-                {
                     return NotFound();
-                }
                 else
-                {
                     throw;
-                }
             }
 
-            return NoContent();
+            // Returnera uppdaterad användare (om frontend vill ha det)
+            return Ok(existingUser);
         }
 
         // PUT: api/users/5
-[HttpPut("{id}/password")]
-public async Task<IActionResult> UpdatePassword(int id, [FromBody] Dictionary<string, object> updates)
-{
-    var user = await _context.Users.FindAsync(id);
-    Console.WriteLine($"Updating password for user ID {id}");
-    if (user == null)
+        [HttpPut("{id}/password")]
+        public async Task<IActionResult> UpdatePassword(int id, [FromBody] Dictionary<string, object> updates)
+        {
+            var user = await _context.Users.FindAsync(id);
+            Console.WriteLine($"Updating password for user ID {id}");
+            if (user == null)
                 return NotFound();
 
-    // Endast lösenordsbyte
-    if (updates.ContainsKey("passwordHash"))
-    {
-        user.PasswordHash = updates["passwordHash"]?.ToString();
+            // Endast lösenordsbyte
+            if (updates.ContainsKey("passwordHash"))
+            {
+                user.PasswordHash = updates["passwordHash"]?.ToString();
 
-        await _context.SaveChangesAsync();
-        return NoContent();
-    }
+                await _context.SaveChangesAsync();
+                return NoContent();
+            }
 
-    // Annars: kräver hela User-objektet (eller hantera fler fält här)
-    return BadRequest("Endast lösenordsbyte stöds i denna PUT.");
-}
+            // Annars: kräver hela User-objektet (eller hantera fler fält här)
+            return BadRequest("Endast lösenordsbyte stöds i denna PUT.");
+        }
 
         // DELETE: api/users/5
         [HttpDelete("{id}")]
