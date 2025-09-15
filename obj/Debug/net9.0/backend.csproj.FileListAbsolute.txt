@@ -163,3 +163,4 @@ C:\Systemutveckling UTB\EmojiSkolan\Backend\bin\Debug\net9.0\backend.dll
 C:\Systemutveckling UTB\EmojiSkolan\Backend\bin\Debug\net9.0\backend.pdb
 C:\Systemutveckling UTB\EmojiSkolan\Backend\obj\Debug\net9.0\backend.genruntimeconfig.cache
 C:\Systemutveckling UTB\EmojiSkolan\Backend\obj\Debug\net9.0\ref\backend.dll
+C:\Systemutveckling UTB\EmojiSkolan\Backend\obj\Debug\net9.0\backend.sourcelink.json

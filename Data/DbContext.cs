@@ -63,19 +63,6 @@ namespace backend.Data
                 new Emoji { Id = 10, Symbol = "😴", Description = "Sover", LevelId = 1 }
             );
 
-            // Seed User
-            modelBuilder.Entity<User>().HasData(
-                new User
-                {
-                    Id = 1, // Seed är okej, nya användare får auto-generated Id
-                    Username = "jerry",
-                    Email = "jerry@test.com",
-                    PasswordHash = "hashedpassword",
-                    AvatarId = 1,
-                    Level = 1
-                }
-            );
-
             // Seed Record
             modelBuilder.Entity<Record>().HasData(
                 new Record

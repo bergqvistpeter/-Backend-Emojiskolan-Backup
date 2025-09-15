@@ -63,6 +63,7 @@ namespace backend.Controllers
             existingUser.Username = user.Username ?? existingUser.Username;
             existingUser.Email = user.Email ?? existingUser.Email;
             existingUser.AvatarId = user.AvatarId != 0 ? user.AvatarId : existingUser.AvatarId;
+            Console.WriteLine($"Updating user ID {id}: Username={existingUser.Username}, Email={existingUser.Email}, AvatarId={existingUser.AvatarId}");
 
             // Endast om lösenord skickas med
             if (!string.IsNullOrEmpty(user.PasswordHash))
