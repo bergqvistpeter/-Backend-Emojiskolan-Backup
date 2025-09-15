@@ -50,13 +50,13 @@ namespace backend.Controllers
 
         // PUT: api/users/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateUser(int id, User user)
+        public async Task<IActionResult> UpdateUser(int id, [FromBody] User user)
         {
             if (id != user.Id)
             {
                 return BadRequest();
             }
-
+            
             _context.Entry(user).State = EntityState.Modified;
 
             try
